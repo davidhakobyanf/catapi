@@ -13,6 +13,7 @@ function App() {
                 <Routes>
                     <Route path='/' element={<Layout />}>
                         <Route index element={<Home />} />
+                        <Route path='/:name' element={<Home />} />
                         <Route path='*' element={<NoPage />} />
                     </Route>
                 </Routes>

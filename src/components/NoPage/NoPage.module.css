@@ -1,0 +1,11 @@
+.noPageContainer {
+    width: 100%;
+    height: calc(100vh - 50px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    font-size: 75px;
+    font-family: Georgia, serif;
+    text-transform: uppercase;
+}
