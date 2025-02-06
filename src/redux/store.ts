@@ -7,3 +7,6 @@ export const store = configureStore({
         cats: catReducer,
     },
 });
+export type RootState = ReturnType<typeof store.getState>;
+
+export type AppDispatch = typeof store.dispatch;
