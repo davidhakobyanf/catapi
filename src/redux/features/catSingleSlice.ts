@@ -1,15 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-interface CatImage {
-    id: string;
-    url: string;
-    width: number;
-    height: number;
-}
+import { CatImageType } from '../../types/common/common';
 
 interface CatsState {
-    images: CatImage[];
+    images: CatImageType[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string | null;
 }
@@ -23,19 +17,22 @@ interface FetchCatImagesParams {
     limit: number;
 }
 
-export const fetchCatImages = createAsyncThunk<CatImage[], FetchCatImagesParams>(
+export const fetchCatImages = createAsyncThunk<CatImageType[], FetchCatImagesParams>(
     'cats/fetchImages',
     async ({ categoryId, limit }, { rejectWithValue }) => {
         try {
-            const response = await axios.get<CatImage[]>(
+            const response = await axios.get<CatImageType[]>(
                 `https://api.thecatapi.com/v1/images/search?category_ids=${categoryId}&limit=${limit}`,
                 {
                     headers: { 'x-api-key': 'live_q3oWZGD4N3r4Gp260jMfg24LgEcftKy1JW4baXDF38C05EtSU5MKfojTI9QlFuGy' },
                 },
             );
             return response.data;
-        } catch (error: any) {
-            return rejectWithValue(error.response?.data?.message || 'Ошибка запроса');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return rejectWithValue(error.message);
+            }
+            return rejectWithValue('Ошибка запроса');
         }
     },
 );
@@ -48,7 +45,7 @@ const catsSlice = createSlice({
             .addCase(fetchCatImages.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(fetchCatImages.fulfilled, (state, action: PayloadAction<CatImage[]>) => {
+            .addCase(fetchCatImages.fulfilled, (state, action: PayloadAction<CatImageType[]>) => {
                 state.status = 'succeeded';
                 state.images = action.payload;
             })
